@@ -480,7 +480,7 @@ function camStart(theVehicle, seat)
 					bx, by, bz =  -0.47, -0.8, 0.35
 				elseif (vModel == 541) then -- Bullet
 					ax, ay, az =  -0.47, 1, 0.3
-					bx, by, bz =  -0.47, -0.5, 0.35
+					bx, by, bz =  -0.47, -0.45, 0.35
 				elseif (vModel == 415) then -- Cheetah
 					ax, ay, az =  -0.45, 1, 0.25
 					bx, by, bz =  -0.45, -0.4, 0.3
@@ -519,7 +519,7 @@ function camStart(theVehicle, seat)
 					bx, by, bz =  -0.5, -0.1, 0.5
 				elseif (vModel == 506) then -- Super GT
 					ax, ay, az =  -0.46, 1, 0.25
-					bx, by, bz =  -0.46, -0.6, 0.3
+					bx, by, bz =  -0.46, -0.65, 0.3
 				elseif (vModel == 451) then -- Turismo
 					ax, ay, az =  -0.47, 1, 0.25
 					bx, by, bz =  -0.47, -0.6, 0.3
@@ -584,36 +584,7 @@ function look(key, keyState, direction)
 			local theVehicle = getPedOccupiedVehicle(getLocalPlayer())
 			if direction == "left" then
 				attachElements(fly, theVehicle, ax-5, by, bz)
-				attachElements(gnat, theVehicle, bx, by+0.3, bz)
-			elseif direction == "right" then
-				attachElements(fly, theVehicle, ax+5, by, bz)
-				attachElements(gnat, theVehicle, bx, by+0.3, bz)
-			elseif direction == "normal" then
-				attachElements(fly, theVehicle, ax, ay, az)
-				attachElements(gnat, theVehicle, bx, by, bz)
-			elseif direction == "behind" then
-				attachElements(fly, theVehicle, ax, ay-10, az)
-				attachElements(gnat, theVehicle, bx, by, bz+0.1)
-			end
-		end
-	end
-
-bindKey("c", "down", look, "behind")
-bindKey("c", "up", look, "normal")
-
-bindKey("q", "down", look, "left")
-bindKey("q", "up", look, "normal")
-
-bindKey("e", "down", look, "right")
-bindKey("e", "up", look, "normal")
-
-
-function lookCustom(thePlayer, direction)
-		if charles then
-			local theVehicle = getPedOccupiedVehicle(getLocalPlayer())
-			if direction == "left" then
-				attachElements(fly, theVehicle, ax-5, by, bz)
-				attachElements(gnat, theVehicle, bx, by+0.3, bz)
+				attachElements(gnat, theVehicle, bx+0.1, by+0.2, bz)
 			elseif direction == "right" then
 				attachElements(fly, theVehicle, ax+5, by, bz)
 				attachElements(gnat, theVehicle, bx, by, bz)
@@ -622,11 +593,21 @@ function lookCustom(thePlayer, direction)
 				attachElements(gnat, theVehicle, bx, by, bz)
 			elseif direction == "behind" then
 				attachElements(fly, theVehicle, ax, ay-10, az)
-				attachElements(gnat, theVehicle, bx, by, bz)
+				attachElements(gnat, theVehicle, bx, by+0.2, bz)
 			end
 		end
 	end
-addCommandHandler("lookCustom", lookCustom)
+
+bindKey("vehicle_look_behind", "down", look, "behind")
+bindKey("vehicle_look_behind", "up", look, "normal")
+
+bindKey("vehicle_look_left", "down", look, "left")
+bindKey("vehicle_look_left", "up", look, "normal")
+
+bindKey("vehicle_look_right", "down", look, "right")
+bindKey("vehicle_look_right", "up", look, "normal")
+
+
 
 function playerVisibleInCockpit(thePlayer, vis)
 		visiblecock = tonumber(vis)
