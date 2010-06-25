@@ -1,12 +1,19 @@
 visiblecock = 1
 cockpit = 1
+rollEnabler = 1
 
 function cam()
 		local theVehicle = getPedOccupiedVehicle(getLocalPlayer())
 		if theVehicle then
+			if rollEnabler then
+				local ax, ay, az = getElementPosition(gnat)
+				local bx, by, bz = getElementPosition(bee)
+				local z = az-bz
+				roll = -math.deg(math.asin(z))
+			end
 			local x, y, z = getElementPosition(gnat)
 			local cx, cy, cz = getElementPosition(fly)
-			setCameraMatrix(x, y, z, cx, cy, cz)
+			setCameraMatrix(x, y, z, cx, cy, cz, roll)
 			cockVehicle = theVehicle
 		elseif charles then
 			camStop(cockVehicle, 0)
@@ -21,6 +28,8 @@ function camStart(theVehicle, seat)
 				setElementAlpha(fly, 0)
 				gnat = createObject(3803, x, y, z)
 				setElementAlpha(gnat, 0)
+				bee = createObject(3803, x, y, z)
+				setElementAlpha(bee, 0)
 				local vModel = getElementModel(theVehicle)
 				if (vModel == 426 or vModel ==  596 or vModel == 597 or vModel == 420) then -- Premier based cars
 					ax, ay, az = -0.55, 1, 0.5
@@ -66,7 +75,7 @@ function camStart(theVehicle, seat)
 					bx, by, bz =  -0.5, -0.3, 0.35
 				elseif (vModel == 474) then -- Hermes
 					ax, ay, az =  -0.5, 1, 0.45
-					bx, by, bz =  -0.5, -0.4, 0.48
+					bx, by, bz =  -0.5, -0.5, 0.48
 				elseif (vModel == 545) then -- Hustler
 					ax, ay, az =  -0.4, 1, 0.4
 					bx, by, bz =  -0.4, -0.4, 0.45
@@ -554,6 +563,7 @@ function camStart(theVehicle, seat)
 				if ax then
 					attachElements(fly, theVehicle, ax, ay, az)
 					attachElements(gnat, theVehicle, bx, by, bz)
+					attachElements(bee, theVehicle, bx+1, by, bz)
 					charles = addEventHandler("onClientPreRender", getRootElement(), cam)
 					setElementAlpha(getLocalPlayer(), 255*visiblecock)
 				else
@@ -574,6 +584,7 @@ function camStop(theVehicle, seat)
 				destroyElement(fly)
 				fly = nil
 				destroyElement(gnat)
+				destroyElement(bee)
 			end
 	end
 addEventHandler("onClientPlayerVehicleExit", getLocalPlayer(), camStop)
@@ -585,15 +596,22 @@ function look(key, keyState, direction)
 			if direction == "left" then
 				attachElements(fly, theVehicle, ax-5, by, bz)
 				attachElements(gnat, theVehicle, bx+0.1, by+0.2, bz)
+				attachElements(bee, theVehicle, bx, by+1, bz)
 			elseif direction == "right" then
 				attachElements(fly, theVehicle, ax+5, by, bz)
 				attachElements(gnat, theVehicle, bx, by, bz)
+				attachElements(bee, theVehicle, bx, by-1, bz)
 			elseif direction == "normal" then
 				attachElements(fly, theVehicle, ax, ay, az)
 				attachElements(gnat, theVehicle, bx, by, bz)
+				attachElements(bee, theVehicle, bx+1, by, bz)
 			elseif direction == "behind" then
 				attachElements(fly, theVehicle, ax, ay-10, az)
 				attachElements(gnat, theVehicle, bx, by+0.2, bz)
+				attachElements(bee, theVehicle, bx-1, by, bz)
+			elseif direction == "up" then
+				attachElements(fly, theVehicle, ax, ay, az+10)
+				attachElements(gnat, theVehicle, bx, by, bz-0.1)
 			end
 		end
 	end
@@ -621,3 +639,13 @@ function cockpitSwitch(thePlayer, cock) -- Comment / delete this to force cockpi
 		cockpit = tonumber(cock)
 	end
 addCommandHandler("usecockpits", cockpitSwitch)
+
+function cockpitRoll(thePlayer, rolly) -- Comment / delete this to force cockpits on players
+		if tonumber(rolly) == 0 then
+		rollEnabler = nil
+		roll = 0
+		elseif tonumber(rolly) == 1 then
+		rollEnabler = 1
+		end
+	end
+addCommandHandler("useroll", cockpitRoll)
