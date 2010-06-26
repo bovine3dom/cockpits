@@ -1,20 +1,28 @@
 visiblecock = 1
 cockpit = 1
 rollEnabler = 1
+aircraftCompat = 0
+ax = nil
 
 function cam()
 		local theVehicle = getPedOccupiedVehicle(getLocalPlayer())
 		if theVehicle then
-			if rollEnabler then
-				local ax, ay, az = getElementPosition(gnat)
-				local bx, by, bz = getElementPosition(bee)
-				local z = az-bz
-				roll = -math.deg(math.asin(z))
+			if cockModel == getElementModel(theVehicle) then
+				if rollEnabler then
+					local ax, ay, az = getElementPosition(gnat)
+					local bx, by, bz = getElementPosition(bee)
+					local z = az-bz
+					roll = -math.deg(math.asin(z))
+				end
+				local x, y, z = getElementPosition(gnat)
+				local cx, cy, cz = getElementPosition(fly)
+				setCameraMatrix(x, y, z, cx, cy, cz, roll)
+				cockVehicle = theVehicle
+				cockModel = getElementModel(theVehicle)
+			else
+				camStop(theVehicle, 0)
+				camStart(theVehicle, 0)
 			end
-			local x, y, z = getElementPosition(gnat)
-			local cx, cy, cz = getElementPosition(fly)
-			setCameraMatrix(x, y, z, cx, cy, cz, roll)
-			cockVehicle = theVehicle
 		elseif charles then
 			camStop(cockVehicle, 0)
 		end
@@ -179,8 +187,8 @@ function camStart(theVehicle, seat)
 					ax, ay, az =  0, 5, 0.7
 					bx, by, bz =  0, 2.3, 0.7
 				elseif (vModel == 520) then -- Hydra
-					ax, ay, az =  0, 5, 0.7
-					bx, by, bz =  0, 2.5, 0.7
+					ax, ay, az =  0, 5, 0.6
+					bx, by, bz =  0, 2.7, 0.65
 				elseif (vModel == 417) then -- Leviathan
 					ax, ay, az =  -0.5, 9, 1.2
 					bx, by, bz =  -0.5, 3, 1.2
@@ -197,8 +205,8 @@ function camStart(theVehicle, seat)
 					ax, ay, az =  -0.5, 9, 0.3
 					bx, by, bz =  -0.5, 2.3, 0.3
 				elseif (vModel == 476) then -- Rustler
-					ax, ay, az =  0, 1, 0.5
-					bx, by, bz =  0, -0.8, 0.4
+					ax, ay, az =  0, 1, 0.4
+					bx, by, bz =  0, -0.6, 0.4
 				elseif (vModel == 469 or vModel ==  447) then -- Sparrow based vehicles
 					ax, ay, az =  -0.4, 5, 0.5
 					bx, by, bz =  -0.4, 0.7, 0.5
@@ -349,9 +357,12 @@ function camStart(theVehicle, seat)
 				elseif (vModel == 588) then -- Hotdog
 					ax, ay, az =  -0.72, 3, 1.05
 					bx, by, bz =  -0.72, 2, 1.1
-				elseif (vModel == 403 or vModel == 514) then -- Linerunner
+				elseif (vModel == 403) then -- Linerunner
 					ax, ay, az =  -0.45, 2, 0.85
 					bx, by, bz =  -0.45, 1.2, 0.9
+				elseif (vModel == 514) then -- Tanker
+					ax, ay, az =  -0.45, 2, 0.85
+					bx, by, bz =  -0.45, 1.4, 0.9
 				elseif (vModel == 423) then -- Mr. Whooppee
 					ax, ay, az =  -0.55, 2, 0.75
 					bx, by, bz =  -0.55, 0.4, 0.8
@@ -559,6 +570,7 @@ function camStart(theVehicle, seat)
 				elseif (vModel == 458) then -- Solair
 					ax, ay, az =  -0.46, 1, 0.3
 					bx, by, bz =  -0.46, -0.15, 0.35
+				else ax = nil
 				end
 				if ax then
 					attachElements(fly, theVehicle, ax, ay, az)
@@ -566,9 +578,11 @@ function camStart(theVehicle, seat)
 					attachElements(bee, theVehicle, bx+1, by, bz)
 					charles = addEventHandler("onClientPreRender", getRootElement(), cam)
 					setElementAlpha(getLocalPlayer(), 255*visiblecock)
+					cockModel = vModel
 				else
 					destroyElement(fly)
 					destroyElement(gnat)
+					destroyElement(bee)
 				end
 			end
 		end
@@ -582,7 +596,6 @@ function camStop(theVehicle, seat)
 				setCameraTarget(getLocalPlayer())
 				setElementAlpha(getLocalPlayer(), 255)
 				destroyElement(fly)
-				fly = nil
 				destroyElement(gnat)
 				destroyElement(bee)
 			end
@@ -625,6 +638,47 @@ bindKey("vehicle_look_left", "up", look, "normal")
 bindKey("vehicle_look_right", "down", look, "right")
 bindKey("vehicle_look_right", "up", look, "normal")
 
+function aircraftCompatibility(thePlayer, enabled)
+		if (tonumber(enabled) == 1) and (aircraftCompat == 0 )then
+			unbindKey("vehicle_look_behind", "down", look, "behind")
+			unbindKey("vehicle_look_behind", "up", look, "normal")
+			unbindKey("vehicle_look_left", "down", look, "left")
+			unbindKey("vehicle_look_left", "up", look, "normal")
+			unbindKey("vehicle_look_right", "down", look, "right")
+			unbindKey("vehicle_look_right", "up", look, "normal")
+			
+			bindKey("special_control_down", "down", look, "behind")
+			bindKey("special_control_down", "up", look, "normal")
+			bindKey("special_control_left", "down", look, "left")
+			bindKey("special_control_left", "up", look, "normal")
+			bindKey("special_control_right", "down", look, "right")
+			bindKey("special_control_right", "up", look, "normal")
+			bindKey("special_control_up", "down", look, "up")
+			bindKey("special_control_up", "up", look, "normal")
+			
+			aircraftCompat = 1
+		elseif (tonumber(enabled) == 0) and (aircraftCompat == 1) then
+			bindKey("vehicle_look_behind", "down", look, "behind")
+			bindKey("vehicle_look_behind", "up", look, "normal")
+			bindKey("vehicle_look_left", "down", look, "left")
+			bindKey("vehicle_look_left", "up", look, "normal")
+			bindKey("vehicle_look_right", "down", look, "right")
+			bindKey("vehicle_look_right", "up", look, "normal")
+			
+			unbindKey("special_control_down", "down", look, "behind")
+			unbindKey("special_control_down", "up", look, "normal")
+			unbindKey("special_control_left", "down", look, "left")
+			unbindKey("special_control_left", "up", look, "normal")
+			unbindKey("special_control_right", "down", look, "right")
+			unbindKey("special_control_right", "up", look, "normal")
+			unbindKey("special_control_up", "down", look, "up")
+			unbindKey("special_control_up", "up", look, "normal")
+			
+			aircraftCompat = 0
+		end
+	end
+	
+addCommandHandler("aircraftcompat", aircraftCompatibility)
 
 
 function playerVisibleInCockpit(thePlayer, vis)
