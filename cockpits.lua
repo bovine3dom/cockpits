@@ -3,6 +3,7 @@ cockpit = 1
 rollEnabler = 1
 aircraftCompat = 0
 ax = nil
+isBike = nil
 
 function cam()
 		local theVehicle = getPedOccupiedVehicle(getLocalPlayer())
@@ -12,7 +13,7 @@ function cam()
 					local ax, ay, az = getElementPosition(gnat)
 					local bx, by, bz = getElementPosition(bee)
 					local z = az-bz
-					roll = -math.deg(math.asin(z))
+					roll = -0.8*math.deg(math.asin(z))
 				end
 				local x, y, z = getElementPosition(gnat)
 				local cx, cy, cz = getElementPosition(fly)
@@ -179,10 +180,10 @@ function camStart(theVehicle, seat)
 					bx, by, bz =  -0.68, 4.3, -0.1
 				elseif (vModel == 512) then -- Cropduster
 					ax, ay, az =  0, 1, 0.5
-					bx, by, bz =  0, -0.4, 0.5
+					bx, by, bz =  0, -0.35, 0.5
 				elseif (vModel == 593) then -- Dodo
-					ax, ay, az =  -0.35, 1, 0.5
-					bx, by, bz =  -0.35, -0.2, 0.7
+					ax, ay, az =  -0.32, 1, 0.65
+					bx, by, bz =  -0.32, -0.2, 0.65
 				elseif (vModel == 425) then -- Hunter
 					ax, ay, az =  0, 5, 0.7
 					bx, by, bz =  0, 2.3, 0.7
@@ -196,8 +197,8 @@ function camStart(theVehicle, seat)
 					ax, ay, az =  -0.5, 5, 0.5
 					bx, by, bz =  -0.5, 1.3, 0.5
 				elseif (vModel == 553) then -- Nevada
-					ax, ay, az =  -0.45, 20, 1
-					bx, by, bz =  -0.45, 9.3, 0.5
+					ax, ay, az =  -0.4, 20, 0.2
+					bx, by, bz =  -0.4, 9.3, 0.6
 				elseif (vModel == 488) then -- News chopper
 					ax, ay, az =  -0.5, 5, 0.5
 					bx, by, bz =  -0.5, 0.5, 0.5
@@ -220,8 +221,9 @@ function camStart(theVehicle, seat)
 					ax, ay, az =  0, 1, 0.2
 					bx, by, bz =  0, -1.3, 0.2
 				elseif (vModel == 581 or vModel == 521 or vModel == 461 or vModel == 522) then -- BF 400, PCJ 600, FCR 900, NRG 500
-					ax, ay, az =  0, 1, 0.8
-					bx, by, bz =  0, -0.1, 0.8
+					ax, ay, az =  0, 1, 0.75
+					bx, by, bz =  0, -0.05, 0.75
+					isBike = 1
 				elseif (vModel == 509) then -- Bike
 					ax, ay, az =  0, 1, 0.7
 					bx, by, bz =  0, -0.3, 0.7
@@ -229,8 +231,9 @@ function camStart(theVehicle, seat)
 					ax, ay, az =  0, 1, 0.7
 					bx, by, bz =  0, -0.2, 0.7
 				elseif (vModel == 462 or vModel == 448) then -- Faggio based vehicles
-					ax, ay, az =  0, 1, 0.9
-					bx, by, bz =  0, -0.1, 0.9
+					ax, ay, az =  0, 1, 0.8
+					bx, by, bz =  0, -0.2, 0.8
+					isBike = 1
 				elseif (vModel == 463) then -- Freeway
 					ax, ay, az =  0, 1, 0.8
 					bx, by, bz =  0, -0.6, 0.8
@@ -238,11 +241,13 @@ function camStart(theVehicle, seat)
 					ax, ay, az =  0, 1, 0.7
 					bx, by, bz =  0, -0.1, 0.7
 				elseif (vModel == 468) then -- Sanchez
-					ax, ay, az =  0, 1, 0.7
-					bx, by, bz =  0, -0.1, 0.7
+					ax, ay, az =  0, 1, 0.85
+					bx, by, bz =  0, -0.3, 0.85
+					isBike = 1
 				elseif (vModel == 586) then -- Wayfarer
-					ax, ay, az =  0, 1, 1
-					bx, by, bz =  0, -0.4, 1
+					ax, ay, az =  0, 1, 0.9
+					bx, by, bz =  0, -0.5, 0.9
+					isBike = 1
 				elseif (vModel == 472) then -- Coastguard
 					ax, ay, az =  -0.2, 1, 1.4
 					bx, by, bz =  -0.2, -0.1, 1.5
@@ -313,8 +318,9 @@ function camStart(theVehicle, seat)
 					ax, ay, az =  -0.6, 10, 0.8
 					bx, by, bz =  -0.6, 2.3, 0.85
 				elseif (vModel == 523) then -- HPV1000
-					ax, ay, az =  0, 1, 0.9
-					bx, by, bz =  0, 0, 0.9
+					ax, ay, az =  0, 1, 0.8
+					bx, by, bz =  0, -0.05, 0.8
+					isBike = 1
 				elseif (vModel == 470) then -- Patriot
 					ax, ay, az =  -0.55, 2, 0.65
 					bx, by, bz =  -0.55, -0.4, 0.7
@@ -338,7 +344,7 @@ function camStart(theVehicle, seat)
 					bx, by, bz =  -0.47, 1, 0.55
 				elseif (vModel == 532) then -- Combine Harvester
 					ax, ay, az =  -1, 10, 1.15
-					bx, by, bz =  -1, 2.8, 1.2
+					bx, by, bz =  -1, 2.85, 1.25
 				elseif (vModel == 578) then -- DFT 30
 					ax, ay, az =  -0.47, 10, 0.5
 					bx, by, bz =  -0.47, 3.2, 0.7
@@ -347,7 +353,7 @@ function camStart(theVehicle, seat)
 					bx, by, bz =  0, -0.6, 1.8
 				elseif (vModel == 406) then -- Dumper
 					ax, ay, az =  -1.4, 10, 1.5
-					bx, by, bz =  -1.4, 2.3, 1.5
+					bx, by, bz =  -1.4, 2.4, 1.5
 				elseif (vModel == 573) then -- Dune
 					ax, ay, az =  -0.6, 3, 0.85
 					bx, by, bz =  -0.6, 1.8, 0.9
@@ -487,8 +493,9 @@ function camStart(theVehicle, seat)
 					ax, ay, az =  -0.55, 2, 1.3
 					bx, by, bz =  -0.55, -0.2, 1.3
 				elseif (vModel == 471) then -- Quadbike
-					ax, ay, az =  0, 10, 0.95
-					bx, by, bz =  0, -0.4, 0.95
+					ax, ay, az =  0, 10, 0.9
+					bx, by, bz =  0, -0.4, 0.9
+					isBike = 1
 				elseif (vModel == 495) then -- Sandking
 					ax, ay, az =  -0.5, 2, 0.6
 					bx, by, bz =  -0.5, -0.3, 0.6
@@ -577,7 +584,11 @@ function camStart(theVehicle, seat)
 					attachElements(gnat, theVehicle, bx, by, bz)
 					attachElements(bee, theVehicle, bx+1, by, bz)
 					charles = addEventHandler("onClientPreRender", getRootElement(), cam)
-					setElementAlpha(getLocalPlayer(), 255*visiblecock)
+					if isBike then
+						setElementAlpha(getLocalPlayer(), 0)
+					else
+						setElementAlpha(getLocalPlayer(), 255*visiblecock)
+					end
 					cockModel = vModel
 				else
 					destroyElement(fly)
@@ -593,6 +604,7 @@ function camStop(theVehicle, seat)
 			if charles  and fly then
 				removeEventHandler("onClientPreRender", getRootElement(), cam)
 				charles = nil
+				isBike = nil
 				setCameraTarget(getLocalPlayer())
 				setElementAlpha(getLocalPlayer(), 255)
 				destroyElement(fly)
@@ -612,7 +624,7 @@ function look(key, keyState, direction)
 				attachElements(bee, theVehicle, bx, by+1, bz)
 			elseif direction == "right" then
 				attachElements(fly, theVehicle, ax+5, by, bz)
-				attachElements(gnat, theVehicle, bx, by, bz)
+				attachElements(gnat, theVehicle, bx-0.1, by+0.2, bz)
 				attachElements(bee, theVehicle, bx, by-1, bz)
 			elseif direction == "normal" then
 				attachElements(fly, theVehicle, ax, ay, az)
@@ -637,6 +649,7 @@ bindKey("vehicle_look_left", "up", look, "normal")
 
 bindKey("vehicle_look_right", "down", look, "right")
 bindKey("vehicle_look_right", "up", look, "normal")
+
 
 function aircraftCompatibility(thePlayer, enabled)
 		if (tonumber(enabled) == 1) and (aircraftCompat == 0 )then
@@ -689,12 +702,31 @@ function playerVisibleInCockpit(thePlayer, vis)
 	end
 addCommandHandler("playervisibleincar", playerVisibleInCockpit)
 
-function cockpitSwitch(thePlayer, cock) -- Comment / delete this to force cockpits on players
-		cockpit = tonumber(cock)
+cameraTries = 4
+function cockpitSwitch() -- Comment / delete this to force cockpits on players
+		if getPedOccupiedVehicle(getLocalPlayer()) then
+			if getVehicleOccupant(getPedOccupiedVehicle(getLocalPlayer()), 0) == getLocalPlayer() then
+				if cameraTries == 4 then
+					if cockpit == 0 then
+						cockpit = 1
+						camStart(getPedOccupiedVehicle(getLocalPlayer()), 0)
+						playSoundFrontEnd(11)
+					elseif cockpit == 1 then
+						camStop(getPedOccupiedVehicle(getLocalPlayer()))
+						cockpit = 0
+						cameraTries = cameraTries - 1
+					end
+				elseif cameraTries == 0 then
+					cameraTries = 4
+				else
+					cameraTries = cameraTries - 1
+				end
+			end
+		end
 	end
-addCommandHandler("usecockpits", cockpitSwitch)
+bindKey("change_camera", "down", cockpitSwitch)
 
-function cockpitRoll(thePlayer, rolly) -- Comment / delete this to force cockpits on players
+function cockpitRoll(thePlayer, rolly) -- Comment / delete this to force rolling cockpits on players
 		if tonumber(rolly) == 0 then
 		rollEnabler = nil
 		roll = 0
